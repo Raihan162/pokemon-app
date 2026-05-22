@@ -2,7 +2,7 @@
 
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { ReactNode, useState } from "react";
 
 export const QueryProvider = ({ children }: { children: ReactNode }) => {
@@ -19,7 +19,7 @@ export const QueryProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const [persister] = useState(() =>
-    createSyncStoragePersister({
+    createAsyncStoragePersister({
       storage: typeof window !== "undefined" ? window.localStorage : undefined,
       key: "pokemon-app-query-cache",
     })
