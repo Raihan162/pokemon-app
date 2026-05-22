@@ -6,6 +6,8 @@ import { SearchInput } from "@/shared/ui/SearchInput";
 import { PokemonCard } from "@/features/pokemon/components/PokemonCard";
 import { usePokemonListQuery } from "@/features/pokemon/hooks/usePokemonListQuery";
 import { env } from "@/lib/env";
+import { TextLink } from "@/shared/ui/TextLink";
+import { SecondaryButton } from "@/shared/ui/SecondaryButton";
 
 export default function PokedexPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,22 +29,22 @@ export default function PokedexPage() {
   const hasNext = page < totalPages;
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 transition-colors duration-300">
+    <div className="min-h-screen bg-surface transition-colors duration-300">
       <main className="max-w-7xl mx-auto px-6 py-10 md:py-16 flex flex-col gap-8 md:gap-12">
         <div className="flex flex-col gap-6">
-          <Link
-            href="/"
-            className="group flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors w-fit font-semibold text-sm md:text-base cursor-pointer"
-          >
-            Back to Home
-          </Link>
+          <div className="flex items-center justify-between">
+            <TextLink href="/" className="group flex items-center gap-2 w-fit">
+              Back to Home
+            </TextLink>
+            <TextLink href="/collection">View Collection</TextLink>
+          </div>
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="flex flex-col gap-2">
-              <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-zinc-50 tracking-tight leading-none">
+              <h1 className="text-4xl md:text-5xl font-extrabold text-on-surface tracking-tight leading-none">
                 Pokedex
               </h1>
-              <p className="text-slate-400 dark:text-zinc-500 font-medium text-sm md:text-base">
+              <p className="text-on-surface-variant font-medium text-sm md:text-base">
                 Showing {filteredPokemon.length} on page {page} of {totalPages}
               </p>
             </div>
@@ -57,29 +59,29 @@ export default function PokedexPage() {
         </div>
 
         <div className="flex items-center gap-3">
-          <button
+          <SecondaryButton
             onClick={() => setPage((prev) => Math.max(1, prev - 1))}
             disabled={!hasPrev || listQuery.isFetching}
-            className="px-4 py-2 text-sm font-bold rounded-full border border-slate-200 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="rounded-full disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Previous
-          </button>
-          <button
+          </SecondaryButton>
+          <SecondaryButton
             onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
             disabled={!hasNext || listQuery.isFetching}
-            className="px-4 py-2 text-sm font-bold rounded-full border border-slate-200 text-slate-700 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="rounded-full disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Next
-          </button>
+          </SecondaryButton>
           {listQuery.isFetching && (
-            <span className="text-xs text-slate-400 font-semibold">Updating list...</span>
+            <span className="text-xs text-on-surface-variant font-semibold">Updating list...</span>
           )}
         </div>
 
         {listQuery.isLoading ? (
-          <div className="py-16 text-center text-slate-500 dark:text-zinc-400">Loading Pokemon...</div>
+          <div className="py-16 text-center text-on-surface-variant">Loading Pokemon...</div>
         ) : listQuery.isError ? (
-          <div className="py-16 text-center text-red-500">Failed to load Pokemon data.</div>
+          <div className="py-16 text-center text-on-error bg-error rounded-xl">Failed to load Pokemon data.</div>
         ) : filteredPokemon.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredPokemon.map((pokemon) => (
@@ -90,7 +92,7 @@ export default function PokedexPage() {
                     name: pokemon.name,
                     imageUrl: pokemon.imageUrl,
                     types: pokemon.types,
-                    bgClass: "bg-[#f8fafc] dark:bg-zinc-900 border-slate-100 dark:border-zinc-800",
+                    bgClass: "bg-surface-container-low border-outline-variant/30",
                     darkBoxClass: "from-zinc-800 to-zinc-900",
                   }}
                 />
@@ -98,7 +100,7 @@ export default function PokedexPage() {
             ))}
           </div>
         ) : (
-          <div className="py-20 text-center text-slate-400 bg-slate-50/50 dark:bg-zinc-900/30 rounded-3xl border border-dashed border-slate-200 dark:border-zinc-800">
+          <div className="py-20 text-center text-on-surface-variant bg-surface-container-low rounded-3xl border border-dashed border-outline-variant">
             No Pokemon found matching &quot;{searchQuery}&quot;
           </div>
         )}

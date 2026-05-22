@@ -35,10 +35,18 @@ export const useFavorites = () => {
   const getByPokemonId = (pokemonId: number) =>
     favorites.find((entry) => entry.pokemonId === pokemonId);
 
+  const removeFavorite = (pokemonId: number) => {
+    queryClient.setQueryData<FavoriteEntry[]>(
+      FAVORITES_QUERY_KEY,
+      (prev = []) => prev.filter((entry) => entry.pokemonId !== pokemonId)
+    );
+  };
+
   return {
     favorites,
     upsertFavorite,
     getByPokemonId,
+    removeFavorite,
     isLoading: favoritesQuery.isLoading,
   };
 };
