@@ -16,10 +16,9 @@ export default function PokedexPage() {
 
   const filteredPokemon = useMemo(() => {
     const items = listQuery.data?.items ?? [];
-    const normalized = searchQuery.trim().toLowerCase();
-    if (!normalized) return items;
-
-    return items.filter((pokemon) => pokemon.name.toLowerCase().includes(normalized));
+    const keyword = searchQuery.trim();
+    if (!keyword) return items;
+    return items.filter((pokemon) => pokemon.name.includes(keyword));
   }, [listQuery.data?.items, searchQuery]);
 
   const totalCount = listQuery.data?.totalCount ?? 0;
