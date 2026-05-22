@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pokemon App Frontend
 
-## Getting Started
+Modern Pokemon explorer built with Next.js App Router, React, TypeScript, Tailwind CSS, React Hook Form, and TanStack Query.
 
-First, run the development server:
+## Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create env file:
+
+```bash
+cp .env.example .env
+```
+
+3. Run development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` - start dev server
+- `npm run lint` - run ESLint
+- `npm run build` - production build
+- `npm run start` - start production server
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+- `POKEAPI_BASE_URL`  
+  Base URL for Pokemon API. Default in example: `https://pokeapi.co/api/v2`
+- `NEXT_PUBLIC_DEFAULT_PAGE_SIZE`  
+  Page size used by Pokedex pagination.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```text
+src/
+  app/
+    pokedex/
+      page.tsx              # list/search/pagination view
+      [id]/page.tsx         # pokemon detail + favorites form
+  components/
+    pokemon/
+      FavoritesForm.tsx     # react-hook-form UI
+    providers/
+      QueryProvider.tsx     # TanStack Query + persistence provider
+    ui/
+      PokemonCard.tsx
+      SearchInput.tsx
+  features/
+    pokemon/
+      api/pokemonApi.ts
+      hooks/
+      mappers/
+      types.ts
+    favorites/
+      hooks/useFavorites.ts
+      types.ts
+  lib/
+    env.ts                  # typed env access
+```
 
-## Deploy on Vercel
+## API Usage Notes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Base API: `https://pokeapi.co/`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Endpoints used:
+
+- `GET /pokemon?offset=<number>&limit=<number>` for list pagination
+- `GET /pokemon/:id` for pokemon detail
+- Pokemon detail URLs returned by list endpoint are also fetched to enrich list cards with image and types.
+
+## Error Handling Approach
+
+- Data fetching is wrapped in typed API functions that throw on non-OK response.
+- UI shows explicit loading, error, and empty states for list and detail pages.
+- Favorites persist in TanStack Query cache with localStorage persistence; app recovers state after reload.
+
+## Performance Notes
+
+- `next/image` is used for optimized image rendering.
+- TanStack Query provides request caching and stale-time control.
+- Pagination limits rendered data and network workload per view.
