@@ -1,7 +1,10 @@
 "use client";
 
-import React from "react";
-import { SearchInputProps } from "@/types";
+import React, { InputHTMLAttributes } from "react";
+
+export interface SearchInputProps extends InputHTMLAttributes<HTMLInputElement> {
+  onSearch?: (value: string) => void;
+}
 
 export const SearchInput: React.FC<SearchInputProps> = ({
   className = "",

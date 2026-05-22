@@ -62,3 +62,39 @@ export interface PokemonDetail {
   heightMeters: number;
   weightKg: number;
 }
+
+
+export interface PokemonAbility {
+  name: string;
+  description: string;
+  isHidden?: boolean;
+}
+
+export interface PokemonStats {
+  hp: number;
+  atk: number;
+  def: number;
+  spatk: number;
+  spdef: number;
+  spd: number;
+}
+
+export interface PokemonCardData {
+  id: string;
+  name: string;
+  imageUrl: string;
+  types: string[];
+  bgClass: string;
+  darkBoxClass: string;
+  description?: string;
+  height?: string;
+  weight?: string;
+  abilities?: PokemonAbility[];
+  stats?: PokemonStats;
+  totalStats?: number;
+}
+
+export interface PokemonCardProps {
+  pokemon: PokemonCardData;
+  onClick?: () => void;
+}

@@ -3,7 +3,7 @@
 import { use, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FavoritesForm } from "@/components/pokemon/FavoritesForm";
+import { FavoritesForm } from "@/features/pokemon/components/FavoritesForm";
 import { usePokemonDetailQuery } from "@/features/pokemon/hooks/usePokemonDetailQuery";
 import { useFavorites } from "@/features/favorites/hooks/useFavorites";
 import { FavoriteFormValues } from "@/features/favorites/types";

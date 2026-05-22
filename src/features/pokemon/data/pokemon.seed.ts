@@ -1,6 +1,6 @@
-import { Pokemon } from "@/types";
+import { PokemonCardData } from "@/features/pokemon/types";
 
-export const POKEMON_LIST: Pokemon[] = [
+export const POKEMON_LIST: PokemonCardData[] = [
   {
     id: "#001",
     name: "Bulbasaur",

@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { SearchInput } from "@/components/ui/SearchInput";
-import { Category, NewsItem } from "@/types";
+import { SearchInput } from "@/shared/ui/SearchInput";
+import { Category, NewsItem } from "@/features/home/types";
 
 const CATEGORIES: Category[] = [
   {

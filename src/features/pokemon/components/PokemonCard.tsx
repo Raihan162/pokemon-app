@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { PokemonCardProps } from "@/types";
+import { PokemonCardProps } from "@/features/pokemon/types";
 
 // Helper to get type color styles
 const getTypeColorClass = (type: string): string => {

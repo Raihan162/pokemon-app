@@ -2,8 +2,8 @@
 
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
-import { SearchInput } from "@/components/ui/SearchInput";
-import { PokemonCard } from "@/components/ui/PokemonCard";
+import { SearchInput } from "@/shared/ui/SearchInput";
+import { PokemonCard } from "@/features/pokemon/components/PokemonCard";
 import { usePokemonListQuery } from "@/features/pokemon/hooks/usePokemonListQuery";
 import { env } from "@/lib/env";
 
