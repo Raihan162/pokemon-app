@@ -7,6 +7,9 @@ const requiredEnv = (value: string | undefined, key: string): string => {
 };
 
 export const env = {
-  pokeApiBaseUrl: requiredEnv(process.env.POKEAPI_BASE_URL, "POKEAPI_BASE_URL"),
-  defaultPageSize: Number(process.env.NEXT_PUBLIC_DEFAULT_PAGE_SIZE ?? "20"),
+  pokeApiBaseUrl: requiredEnv(
+    process.env.NEXT_PUBLIC_POKEAPI_BASE_URL,
+    'NEXT_PUBLIC_POKEAPI_BASE_URL',
+  ),
+  defaultPageSize: Number(process.env.NEXT_PUBLIC_DEFAULT_PAGE_SIZE ?? '20'),
 };
