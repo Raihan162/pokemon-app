@@ -33,7 +33,7 @@ Open `http://localhost:3000`.
 
 ## Environment Variables
 
-- `POKEAPI_BASE_URL`  
+- `NEXT_PUBLIC_POKEAPI_BASE_URL`  
   Base URL for Pokemon API. Default in example: `https://pokeapi.co/api/v2`
 - `NEXT_PUBLIC_DEFAULT_PAGE_SIZE`  
   Page size used by Pokedex pagination.
@@ -43,25 +43,33 @@ Open `http://localhost:3000`.
 ```text
 src/
   app/
+    collection/
+      page.tsx              # favorites collection explorer
     pokedex/
       page.tsx              # list/search/pagination view
       [id]/page.tsx         # pokemon detail + favorites form
-  components/
-    pokemon/
-      FavoritesForm.tsx     # react-hook-form UI
+  shared/
+    ui/
+      PrimaryButton.tsx
+      SecondaryButton.tsx
+      TextLink.tsx
+      SearchInput.tsx
+      NewsCard.tsx
+      PokemonSummaryCard.tsx
     providers/
       QueryProvider.tsx     # TanStack Query + persistence provider
-    ui/
-      PokemonCard.tsx
-      SearchInput.tsx
   features/
     pokemon/
       api/pokemonApi.ts
+      components/
+        PokemonCard.tsx
+        FavoritesForm.tsx
       hooks/
       mappers/
       types.ts
     favorites/
       hooks/useFavorites.ts
+      schemas/favoriteFormSchema.ts
       types.ts
   lib/
     env.ts                  # typed env access
@@ -82,6 +90,12 @@ Endpoints used:
 - Data fetching is wrapped in typed API functions that throw on non-OK response.
 - UI shows explicit loading, error, and empty states for list and detail pages.
 - Favorites persist in TanStack Query cache with localStorage persistence; app recovers state after reload.
+- Favorites form uses `zod` + `react-hook-form` resolver for input validation.
+
+## Current Behavior Notes
+
+- Pokedex search is case-sensitive by project decision.
+- Favorites can be reviewed from `/collection`.
 
 ## Performance Notes
 
