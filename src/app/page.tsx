@@ -177,7 +177,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="py-8 text-center text-slate-400 bg-slate-100/50 dark:bg-zinc-900/50 rounded-2xl border border-dashed border-slate-200 dark:border-zinc-800">
-              No categories found matching "{searchQuery}"
+              No categories found matching &quot;{searchQuery}&quot;
             </div>
           )}
         </div>
