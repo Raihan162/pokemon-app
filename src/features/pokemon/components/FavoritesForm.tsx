@@ -1,6 +1,8 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { favoriteFormSchema, FavoriteFormSchemaInput } from "@/features/favorites/schemas/favoriteFormSchema";
 import { POKEMON_COLLECTION_TYPES } from "@/features/pokemon/constants";
 import { FavoriteFormValues } from "@/features/favorites/types";
 
@@ -16,12 +18,22 @@ const initialValues: FavoriteFormValues = {
 };
 
 export const FavoritesForm = ({ defaultValues, onSubmit }: FavoritesFormProps) => {
-  const { register, handleSubmit, formState } = useForm<FavoriteFormValues>({
-    defaultValues: defaultValues ?? initialValues,
+  const { register, handleSubmit, formState } = useForm<FavoriteFormSchemaInput>({
+    resolver: zodResolver(favoriteFormSchema),
+    defaultValues: (defaultValues ?? initialValues) as FavoriteFormSchemaInput,
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+    <form
+      onSubmit={handleSubmit((values) =>
+        onSubmit({
+          nickname: values.nickname.trim(),
+          collectionType: values.collectionType,
+          description: (values.description ?? "").trim(),
+        })
+      )}
+      className="flex flex-col gap-4"
+    >
       <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-slate-700">Nickname</label>
         <input
@@ -46,6 +58,9 @@ export const FavoritesForm = ({ defaultValues, onSubmit }: FavoritesFormProps) =
             </option>
           ))}
         </select>
+        {formState.errors.collectionType && (
+          <p className="text-xs text-red-500">{formState.errors.collectionType.message}</p>
+        )}
       </div>
 
       <div className="flex flex-col gap-1">
@@ -55,6 +70,9 @@ export const FavoritesForm = ({ defaultValues, onSubmit }: FavoritesFormProps) =
           className="border border-slate-200 rounded-xl px-3 py-2 text-sm min-h-20"
           placeholder="Optional notes"
         />
+        {formState.errors.description && (
+          <p className="text-xs text-red-500">{formState.errors.description.message}</p>
+        )}
       </div>
 
       <button
