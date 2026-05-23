@@ -21,12 +21,8 @@ export const getPokemonListPage = async (page: number, pageSize: number): Promis
     `${env.pokeApiBaseUrl}/pokemon?offset=${offset}&limit=${safePageSize}`
   );
 
-  const details = await Promise.all(
-    listData.results.map((result) => fetchJson<PokemonApiResponse>(result.url))
-  );
-
   return {
-    items: details.map(mapPokemonListItem),
+    items: listData.results.map(mapPokemonListItem),
     totalCount: listData.count,
   };
 };

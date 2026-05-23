@@ -100,7 +100,7 @@ export default function PokedexPage() {
           )}
         </div>
 
-        {isBackgroundFetching || isInitialLoading ? (
+        {listQuery.isFetching || isBackgroundFetching || isInitialLoading ? (
           <div className='py-20 flex items-center justify-center'>
             <Loader />
           </div>
