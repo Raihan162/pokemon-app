@@ -28,6 +28,11 @@ Open `http://localhost:3000`.
 
 - `npm run dev` - start dev server
 - `npm run lint` - run ESLint
+- `npm run test` - run unit/component tests with Vitest
+- `npm run test:watch` - run Vitest in watch mode
+- `npm run test:e2e` - run Playwright end-to-end tests
+- `npm run test:e2e:ui` - run Playwright in UI mode
+- `npm run test:e2e:install` - install Playwright browser binaries
 - `npm run build` - production build
 - `npm run start` - start production server
 
@@ -73,6 +78,11 @@ src/
       types.ts
   lib/
     env.ts                  # typed env access
+e2e/
+  pokedex.smoke.spec.ts     # Playwright smoke + flow tests
+vitest.config.ts            # Vitest configuration
+vitest.setup.ts             # test setup (jest-dom)
+playwright.config.ts        # Playwright configuration
 ```
 
 ## API Usage Notes
