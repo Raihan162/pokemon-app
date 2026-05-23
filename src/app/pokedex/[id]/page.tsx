@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { FavoritesForm } from "@/features/pokemon/components/FavoritesForm";
 import { usePokemonDetailQuery } from "@/features/pokemon/hooks/usePokemonDetailQuery";
@@ -13,18 +13,50 @@ export default function PokemonDetailPage({ params }: { params: Promise<{ id: st
   const { id } = use(params);
   const detailQuery = usePokemonDetailQuery(id);
   const [showForm, setShowForm] = useState(false);
-  const { upsertFavorite, getByPokemonId } = useFavorites();
+  const { addFavorite, favorites } = useFavorites();
+  const modalTitleId = "capture-collection-modal-title";
 
-  const currentFavorite = useMemo(() => {
+  const collectionCount = useMemo(() => {
     const pokemonId = Number(id);
-    return Number.isNaN(pokemonId) ? undefined : getByPokemonId(pokemonId);
-  }, [getByPokemonId, id]);
+    if (Number.isNaN(pokemonId)) return 0;
+    return favorites.filter((entry) => entry.pokemonId === pokemonId).length;
+  }, [favorites, id]);
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+  };
 
   const handleSaveFavorite = (values: FavoriteFormValues) => {
     if (!detailQuery.data) return;
-    upsertFavorite(detailQuery.data.id, detailQuery.data.name, values);
-    setShowForm(false);
+    addFavorite(detailQuery.data.id, detailQuery.data.name, values);
+    handleCloseForm();
   };
+
+  useEffect(() => {
+    if (!showForm) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        handleCloseForm();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showForm]);
+
+  useEffect(() => {
+    if (!showForm) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [showForm]);
 
   if (detailQuery.isLoading) {
     return <div className="min-h-screen bg-surface flex items-center justify-center text-on-surface-variant">Loading Pokemon detail...</div>;
@@ -87,15 +119,15 @@ export default function PokemonDetailPage({ params }: { params: Promise<{ id: st
             </div>
 
             <PrimaryButton
-              onClick={() => setShowForm((prev) => !prev)}
+              onClick={() => setShowForm(true)}
               className="w-fit"
             >
-              {currentFavorite ? "Edit Collection Entry" : "Add to Collection"}
+              {collectionCount > 0 ? "Add Another to Collection" : "Add to Collection"}
             </PrimaryButton>
 
-            {currentFavorite && (
+            {collectionCount > 0 && (
               <p className="text-xs text-on-surface-variant">
-                Saved as <b>{currentFavorite.nickname}</b> in {currentFavorite.collectionType}
+                This Pokemon is already in your collection ({collectionCount} entr{collectionCount > 1 ? "ies" : "y"}).
               </p>
             )}
           </div>
@@ -120,20 +152,38 @@ export default function PokemonDetailPage({ params }: { params: Promise<{ id: st
         </div>
 
         {showForm && (
-          <div className="bg-surface-container-lowest rounded-3xl border border-outline-variant/40 p-6 shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
-            <h2 className="text-xl font-bold text-on-surface mb-4">Capture to Collection</h2>
-            <FavoritesForm
-              defaultValues={
-                currentFavorite
-                  ? {
-                      nickname: currentFavorite.nickname,
-                      collectionType: currentFavorite.collectionType,
-                      description: currentFavorite.description ?? "",
-                    }
-                  : undefined
+          <div
+            className="fixed inset-0 z-50 bg-black/40 p-4 flex items-center justify-center"
+            onClick={(event) => {
+              if (event.target === event.currentTarget) {
+                handleCloseForm();
               }
-              onSubmit={handleSaveFavorite}
-            />
+            }}
+          >
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={modalTitleId}
+              className="w-full max-w-xl max-h-[calc(100vh-2rem)] overflow-y-auto bg-surface-container-lowest rounded-3xl border border-outline-variant/40 p-6 shadow-[0_16px_40px_rgba(0,0,0,0.2)]"
+            >
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <h2 id={modalTitleId} className="text-xl font-bold text-on-surface">
+                  Capture to Collection
+                </h2>
+                <button
+                  type="button"
+                  aria-label="Close capture form"
+                  onClick={handleCloseForm}
+                  className="h-9 w-9 rounded-full border border-outline-variant/60 text-on-surface-variant hover:bg-surface-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                >
+                  X
+                </button>
+              </div>
+
+              <FavoritesForm
+                onSubmit={handleSaveFavorite}
+              />
+            </div>
           </div>
         )}
       </main>

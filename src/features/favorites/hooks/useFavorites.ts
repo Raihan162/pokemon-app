@@ -2,51 +2,49 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FavoriteEntry, FavoriteFormValues } from "@/features/favorites/types";
+import { readFavorites, writeFavorites } from "@/features/favorites/storage/favoritesStorage";
 
-export const FAVORITES_QUERY_KEY = ["favorites"] as const;
+export const FAVORITES_QUERY_KEY = ["favorites", "v2"] as const;
 
 export const useFavorites = () => {
   const queryClient = useQueryClient();
 
   const favoritesQuery = useQuery({
     queryKey: FAVORITES_QUERY_KEY,
-    queryFn: () => [] as FavoriteEntry[],
+    queryFn: readFavorites,
     staleTime: Number.POSITIVE_INFINITY,
   });
 
   const favorites = favoritesQuery.data ?? [];
 
-  const upsertFavorite = (pokemonId: number, pokemonName: string, values: FavoriteFormValues) => {
+  const addFavorite = (pokemonId: number, pokemonName: string, values: FavoriteFormValues) => {
     const nextEntry: FavoriteEntry = {
       pokemonId,
       pokemonName,
       nickname: values.nickname.trim(),
       collectionType: values.collectionType,
-      description: values.description.trim() || undefined,
-      createdAt: new Date().toISOString(),
+      description: values.description.trim(),
     };
 
     queryClient.setQueryData<FavoriteEntry[]>(FAVORITES_QUERY_KEY, (prev = []) => {
-      const withoutCurrent = prev.filter((item) => item.pokemonId !== pokemonId);
-      return [nextEntry, ...withoutCurrent];
+      const nextFavorites = [nextEntry, ...prev];
+      writeFavorites(nextFavorites);
+      return nextFavorites;
     });
   };
 
-  const getByPokemonId = (pokemonId: number) =>
-    favorites.find((entry) => entry.pokemonId === pokemonId);
-
-  const removeFavorite = (pokemonId: number) => {
-    queryClient.setQueryData<FavoriteEntry[]>(
-      FAVORITES_QUERY_KEY,
-      (prev = []) => prev.filter((entry) => entry.pokemonId !== pokemonId)
-    );
+  const removeFavoriteAtIndex = (index: number) => {
+    queryClient.setQueryData<FavoriteEntry[]>(FAVORITES_QUERY_KEY, (prev = []) => {
+      const nextFavorites = prev.filter((_, favoriteIndex) => favoriteIndex !== index);
+      writeFavorites(nextFavorites);
+      return nextFavorites;
+    });
   };
 
   return {
     favorites,
-    upsertFavorite,
-    getByPokemonId,
-    removeFavorite,
+    addFavorite,
+    removeFavoriteAtIndex,
     isLoading: favoritesQuery.isLoading,
   };
 };

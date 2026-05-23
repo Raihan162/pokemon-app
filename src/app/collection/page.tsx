@@ -6,7 +6,7 @@ import { SecondaryButton } from "@/shared/ui/SecondaryButton";
 import { TextLink } from "@/shared/ui/TextLink";
 
 export default function CollectionPage() {
-  const { favorites, removeFavorite, isLoading } = useFavorites();
+  const { favorites, removeFavoriteAtIndex, isLoading } = useFavorites();
 
   return (
     <div className="min-h-screen bg-surface transition-colors duration-300">
@@ -26,9 +26,9 @@ export default function CollectionPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {favorites.map((entry) => (
+            {favorites.map((entry, index) => (
               <article
-                key={entry.pokemonId}
+                key={`${entry.pokemonId}-${entry.nickname}-${entry.collectionType}-${index}`}
                 className="rounded-[24px] border border-outline-variant/40 bg-surface-container-lowest p-5 flex flex-col gap-3 shadow-[0_8px_24px_rgba(0,0,0,0.03)]"
               >
                 <div className="flex items-start justify-between gap-3">
@@ -55,7 +55,7 @@ export default function CollectionPage() {
                     Open Detail
                   </Link>
                   <SecondaryButton
-                    onClick={() => removeFavorite(entry.pokemonId)}
+                    onClick={() => removeFavoriteAtIndex(index)}
                     className="px-3 py-1.5 text-xs rounded-full"
                   >
                     Remove

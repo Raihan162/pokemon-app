@@ -5,6 +5,7 @@ import Link from "next/link";
 import { SearchInput } from "@/shared/ui/SearchInput";
 import { PokemonCard } from "@/features/pokemon/components/PokemonCard";
 import { usePokemonListQuery } from "@/features/pokemon/hooks/usePokemonListQuery";
+import { useFavorites } from "@/features/favorites/hooks/useFavorites";
 import { env } from "@/lib/env";
 import { TextLink } from "@/shared/ui/TextLink";
 import { SecondaryButton } from "@/shared/ui/SecondaryButton";
@@ -15,6 +16,14 @@ export default function PokedexPage() {
   const pageSize = env.defaultPageSize;
 
   const listQuery = usePokemonListQuery(page, pageSize);
+  const { favorites } = useFavorites();
+
+  const collectionCountByPokemonId = useMemo(() => {
+    return favorites.reduce<Record<number, number>>((accumulator, entry) => {
+      accumulator[entry.pokemonId] = (accumulator[entry.pokemonId] ?? 0) + 1;
+      return accumulator;
+    }, {});
+  }, [favorites]);
 
   const filteredPokemon = useMemo(() => {
     const items = listQuery.data?.items ?? [];
@@ -92,6 +101,7 @@ export default function PokedexPage() {
                     name: pokemon.name,
                     imageUrl: pokemon.imageUrl,
                     types: pokemon.types,
+                    collectionCount: collectionCountByPokemonId[pokemon.id] ?? 0,
                     bgClass: "bg-surface-container-low border-outline-variant/30",
                     darkBoxClass: "from-zinc-800 to-zinc-900",
                   }}

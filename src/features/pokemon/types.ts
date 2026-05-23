@@ -84,6 +84,7 @@ export interface PokemonCardData {
   name: string;
   imageUrl: string;
   types: string[];
+  collectionCount?: number;
   bgClass: string;
   darkBoxClass: string;
   description?: string;
