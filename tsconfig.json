@@ -22,10 +22,6 @@
         "name": "next"
       }
     ],
-    "types": [
-      "vitest/globals",
-      "@testing-library/jest-dom"
-    ],
     "paths": {
       "@/*": [
         "./src/*"
@@ -34,7 +30,6 @@
   },
   "include": [
     "next-env.d.ts",
-    "vitest.setup.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
