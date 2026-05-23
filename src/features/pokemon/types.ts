@@ -2,10 +2,12 @@ export interface PokemonListResponse {
   count: number;
   next: string | null;
   previous: string | null;
-  results: Array<{
-    name: string;
-    url: string;
-  }>;
+  results: PokemonListResult[];
+}
+
+export interface PokemonListResult {
+  name: string;
+  url: string;
 }
 
 export interface PokemonApiType {
@@ -84,6 +86,7 @@ export interface PokemonCardData {
   name: string;
   imageUrl: string;
   types: string[];
+  collectionCount?: number;
   bgClass: string;
   darkBoxClass: string;
   description?: string;

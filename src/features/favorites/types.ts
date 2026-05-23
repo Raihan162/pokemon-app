@@ -13,6 +13,5 @@ export interface FavoriteEntry {
   pokemonName: string;
   nickname: string;
   collectionType: CollectionType;
-  description?: string;
-  createdAt: string;
+  description: string;
 }
